@@ -4,7 +4,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { PopupComponent } from '../InformationPage/info.component';
+import { PopupComponent } from '../InfoPage/info.component';
 
 @Component({
   selector: 'app-home-component',
