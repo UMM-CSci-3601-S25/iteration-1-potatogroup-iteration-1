@@ -1,14 +1,14 @@
 <div class="flex-row">
   <div class="flex-1">
-    <mat-card class="home-card">
-      <mat-card-header>
-        <mat-card-title>
-          Home
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        This is a home page! It doesn't do anything!
-      </mat-card-content>
+    <mat-card class="game-title">
+      <mat-card-actions>
+        <button class= "join-button" mat-raised-button routerLink="/host">
+          Host Game
+        </button>
+        <button class= "host-button" mat-raised-button routerLink="/join">
+          Join Game
+        </button>
+      </mat-card-actions>
     </mat-card>
   </div>
 </div>
