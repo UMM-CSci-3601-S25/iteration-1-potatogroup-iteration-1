@@ -28,7 +28,7 @@ describe('Home', () => {
 
   it('It loads each element (e.g., buttons, title)', () => {
     fixture.detectChanges();
-    expect(el.textContent).toContain('Game');
+    expect(el.textContent).toContain('Card Game Simulator');
     expect(el.textContent).toContain('Host Game');
     expect(el.textContent).toContain('Join Game');
     expect(component).toBeTruthy();
