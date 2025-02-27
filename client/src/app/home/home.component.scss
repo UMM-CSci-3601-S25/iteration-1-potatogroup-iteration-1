@@ -1,0 +1,29 @@
+.game-title
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+    align-items: center;
+    justify-content: center;
+
+
+}
+
+.host-button
+{
+  align-items: center;
+  font-size: 2rem;
+  background-color: gray;
+  color: whitesmoke;
+
+}
+
+.join-button
+{
+  align-self: auto;
+  font-size: 2rem;
+  background-color: gray;
+  color: whitesmoke;
+}
+
