@@ -11,6 +11,6 @@ import { Router} from '@angular/router';
 
 
 export class JoinComponent {
-  constructor(private router: Router){}
+  constructor(private router: Router) {}
 
 }

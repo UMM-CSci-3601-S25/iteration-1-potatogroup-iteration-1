@@ -27,7 +27,7 @@ describe('Host', () => {
 
   it('It has the basic Host page text', () => {
     fixture.detectChanges();
-    expect(el.textContent).toContain('This is a Host page! It doesn\'t do anything!');
+    expect(el.textContent).toContain('This is a placeholder for the host page!');
     expect(component).toBeTruthy();
   });
 

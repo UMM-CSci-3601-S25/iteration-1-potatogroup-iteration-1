@@ -27,7 +27,7 @@ describe('Join', () => {
 
   it('It has the basic Join page text', () => {
     fixture.detectChanges();
-    expect(el.textContent).toContain('This is a Join page! It doesn\'t do anything!');
+    expect(el.textContent).toContain('This is a placeholder for the join page!');
     expect(component).toBeTruthy();
   });
 
