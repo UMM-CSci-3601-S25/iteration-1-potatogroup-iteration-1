@@ -1,7 +1,7 @@
 export class StartScreenPage {
 
   private readonly url = '';
-  private readonly title = '.game.title';
+  private readonly title = '.game-title';
   private readonly joinButton = '.join-button';
   private readonly hostButton = '.host-button';
   private readonly snackBar = '.mat-mdc-simple-snack-bar';
