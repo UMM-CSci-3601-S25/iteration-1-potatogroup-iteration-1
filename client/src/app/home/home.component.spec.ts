@@ -22,7 +22,7 @@ describe('Home', () => {
     component = fixture.componentInstance; // BannerComponent test instance
 
     // query for the link (<a> tag) by CSS element selector
-    de = fixture.debugElement.query(By.css('.game-title'));
+    de = fixture.debugElement.query(By.css('.start-screen'));
     el = de.nativeElement;
   });
 
