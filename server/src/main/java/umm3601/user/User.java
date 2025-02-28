@@ -1,5 +1,7 @@
 package umm3601.user;
 
+import java.util.ArrayList;
+
 import org.mongojack.Id;
 import org.mongojack.ObjectId;
 
@@ -30,9 +32,8 @@ public class User {
 
   public String name;
   public int age;
-  public String company;
-  public String email;
-  public String avatar;
+  public ArrayList<Card> cards;
+  public int points;
   public String role;
 
   @Override
@@ -63,4 +64,5 @@ public class User {
   public String toString() {
     return name;
   }
+
 }
