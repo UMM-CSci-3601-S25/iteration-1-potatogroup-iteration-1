@@ -1,0 +1,20 @@
+[
+  {
+    "_id": {
+      "$oid": "123"
+    },
+    "body": "apples"
+  },
+  {
+    "_id": {
+      "$oid": "456"
+    },
+    "body": "oranges"
+  },
+  {
+    "_id": {
+      "$oid": "789"
+    },
+    "body": "bananas"
+  }
+]
