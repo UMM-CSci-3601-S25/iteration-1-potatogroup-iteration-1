@@ -10,11 +10,5 @@
       "$oid": "456"
     },
     "body": "oranges"
-  },
-  {
-    "_id": {
-      "$oid": "789"
-    },
-    "body": "bananas"
   }
 ]
