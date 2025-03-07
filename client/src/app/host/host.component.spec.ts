@@ -1,8 +1,19 @@
-import { DebugElement } from '@angular/core';
+import { DebugElement} from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
 import { By } from '@angular/platform-browser';
 import { HostComponent } from './host.component';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterLink, RouterModule} from '@angular/router';
+import { MatOptionModule } from '@angular/material/core';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('Host', () => {
 
@@ -13,7 +24,20 @@ describe('Host', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatCardModule, HostComponent],
+      imports: [MatInputModule,
+        FormsModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatRadioModule,
+        MatButtonModule,
+        RouterLink,
+        MatCardModule,
+        MatOptionModule,
+        MatExpansionModule,
+        MatDividerModule,
+        MatFormFieldModule,
+        HostComponent,
+        RouterModule.forRoot([])],
     });
 
     fixture = TestBed.createComponent(HostComponent);

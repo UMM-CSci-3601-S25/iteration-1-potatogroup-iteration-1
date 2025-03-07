@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,7 +41,6 @@ public class LobbyController implements Controller {
 
   private static final String API_LOBBIES = "/api/lobbies";
   private static final String API_LOBBY_BY_ID = "/api/lobbies/{id}";
-  static final String LOBBIES_KEY = "lobbies";
   static final String NAME_KEY = "lobbyName";
   static final String SORT_ORDER_KEY = "sortorder";
   static final String USERS_KEY = "users";
@@ -106,7 +106,6 @@ public class LobbyController implements Controller {
     // According to the Javalin documentation (https://javalin.io/documentation#context),
     // this calls result(jsonString), and also sets content type to json
     ctx.json(matchingLobbies);
-
     // Explicitly set the context status to OK
     ctx.status(HttpStatus.OK);
   }
@@ -178,53 +177,7 @@ public class LobbyController implements Controller {
    *   (in either `asc` or `desc` order) or by the number of lobbies in the
    *   company (`count`, also in either `asc` or `desc` order).
    */
-  public void getLobbiesGroupedByCompany(Context ctx) {
-    // We'll support sorting the results either by company name (in either `asc` or `desc` order)
-    // or by the number of lobbies in the company (`count`, also in either `asc` or `desc` order).
-    String sortBy = Objects.requireNonNullElse(ctx.queryParam("sortBy"), "_id");
-    if (sortBy.equals("company")) {
-      sortBy = "_id";
-    }
-    String sortOrder = Objects.requireNonNullElse(ctx.queryParam("sortOrder"), "asc");
-    Bson sortingOrder = sortOrder.equals("desc") ?  Sorts.descending(sortBy) : Sorts.ascending(sortBy);
 
-    // The `LobbyByCompany` class is a simple class that has fields for the company
-    // name, the number of lobbies in that company, and a list of lobby names and IDs
-    // (using the `LobbyIdName` class to store the lobby names and IDs).
-    // We're going to use the aggregation pipeline to group lobbies by company, and
-    // then count the number of lobbies in each company. We'll also collect the lobby
-    // names and IDs for each lobby in each company. We'll then convert the results
-    // of the aggregation pipeline to `LobbyByCompany` objects.
-
-    ArrayList<LobbyByName> matchingLobbies = lobbyCollection
-      // The following aggregation pipeline groups lobbies by company, and
-      // then counts the number of lobbies in each company. It also collects
-      // the lobby names and IDs for each lobby in each company.
-      .aggregate(
-        List.of(
-          // Project the fields we want to use in the next step, i.e., the _id, name, and company fields
-          new Document("$project", new Document("_id", 1).append("name", 1).append("company", 1)),
-          // Group the lobbies by company, and count the number of lobbies in each company
-          new Document("$group", new Document("_id", "$company")
-            // Count the number of lobbies in each company
-            .append("count", new Document("$sum", 1))
-            // Collect the lobby names and IDs for each lobby in each company
-            .append("lobbies", new Document("$push", new Document("_id", "$_id").append("name", "$name")))),
-          // Sort the results. Use the `sortby` query param (default "company")
-          // as the field to sort by, and the query param `sortorder` (default
-          // "asc") to specify the sort order.
-          new Document("$sort", sortingOrder)
-        ),
-        // Convert the results of the aggregation pipeline to LobbyGroupResult objects
-        // (i.e., a list of LobbyGroupResult objects). It is necessary to have a Java type
-        // to convert the results to, and the JacksonMongoCollection will do this for us.
-        LobbyByName.class
-      )
-      .into(new ArrayList<>());
-
-    ctx.json(matchingLobbies);
-    ctx.status(HttpStatus.OK);
-  }
   public void addNewUser(Context ctx)
   {
      /*
@@ -246,22 +199,20 @@ public class LobbyController implements Controller {
       .check(user -> user.name != null && user.name.length() > 0,
         "User must have a non-empty lobby name; body was " + body)
       .get();
-
-
-
-    // Add the new lobby to the database
-
-
-    // Set the JSON response to be the `_id` of the newly created lobby.
-    // This gives the client the opportunity to know the ID of the new lobby,
-    // which it can then use to perform further operations (e.g., a GET request
-    // to get and display the details of the new lobby).
     ctx.json(Map.of("id", newUser._id));
     String id = ctx.pathParam("lobbyID");
-    ArrayList<String> users = lobbyCollection.findOneById("id").users;
-    users.add(newUser._id);
-    ;
-    UpdateResult updateResult = lobbyCollection.updateOne(eq("_id", new ObjectId(id)), Updates.set("users", users));
+
+
+    //Makes a Hashmap that holds the new user id
+    Map<String, Object> incomingMap = new HashMap<>();
+    incomingMap.put("id", newUser._id);
+    // convert to a Document
+    Document newDocument = new Document();
+    incomingMap.forEach((k, v) -> {
+            newDocument.append(k, v);
+    });
+    //Adds the document to the desired lobby
+    UpdateResult updateResult = lobbyCollection.updateOne(new Document("_id", id), Updates.push("users", newDocument));
     if (updateResult.getModifiedCount() != 1) {
       ctx.status(HttpStatus.NOT_FOUND);
       throw new NotFoundResponse(
@@ -399,7 +350,6 @@ public class LobbyController implements Controller {
     // of the HTTP request
     server.post(API_LOBBIES, this::addNewLobby);
 
-    server.post(API_LOBBIES, this::addNewUser);
 
     // Delete the specified lobby
     server.delete(API_LOBBY_BY_ID, this::deleteLobby);
