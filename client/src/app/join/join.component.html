@@ -1,17 +1,54 @@
 <div class="flex-row">
   <div class="flex-1">
-    <mat-card class="join-card">
-      <mat-card-header>
-        <mat-card-title class="join-title">Join</mat-card-title>
-      </mat-card-header>
-      <mat-card-content class="game-title">
-        This is a placeholder for the join page!
-      </mat-card-content>
-    </mat-card>
+    <form [formGroup]="joinForm" (ngSubmit)="submitForm();">
+      <mat-card class="join-card">
+        <mat-card-header>
+          <mat-card-title class="join-title">Join</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex-col">
+            <mat-form-field>
+              <mat-label>Name</mat-label>
+              <input matInput formControlName="name" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Card 1</mat-label>
+              <input matInput formControlName="card1" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Card 2</mat-label>
+              <input matInput formControlName="card2" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Card 3</mat-label>
+              <input matInput formControlName="card3" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Card 4</mat-label>
+              <input matInput formControlName="card4" required>
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Card 5</mat-label>
+              <input matInput formControlName="card5" required>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button
+            mat-button
+            type="submit"
+            color="primary"
+            data-test="confirmJoinButton"
+            >
+            JOIN
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
     <div class="button-container">
-  <button mat-fab class="info-fab" matTooltip="Rules and Information" matTooltipPosition="left" (click)="openDialog()">
-    <mat-icon class="md-24" aria-label="Info">info</mat-icon>
-  </button>
+      <button mat-fab class="info-fab" matTooltip="Rules and Information" matTooltipPosition="left" (click)="openDialog()">
+        <mat-icon class="md-24" aria-label="Info">info</mat-icon>
+      </button>
+    </div>
   </div>
-</div>
 </div>
