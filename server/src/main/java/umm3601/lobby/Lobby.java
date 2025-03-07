@@ -31,7 +31,7 @@ public class Lobby {
   // name of the field as used by MongoDB.
   @SuppressWarnings({"MemberName"})
   public String _id;
-  public ArrayList<String> users;
+  public String[] userIDs;
   public String lobbyName;
 
   @Override
