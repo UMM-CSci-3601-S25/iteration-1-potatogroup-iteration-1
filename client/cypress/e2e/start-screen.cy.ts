@@ -13,7 +13,7 @@ describe('Start Screen', () => {
   });
 
   it('Should have the correct title', () => {
-    page.getTitle().should('have.text', 'Game');
+    page.getTitle().should('have.text', 'Card Game Simulator');
   });
 
   // There are 10 users in the database, two of which work
