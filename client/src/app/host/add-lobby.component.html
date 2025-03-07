@@ -1,0 +1,38 @@
+<div class="flex-row">
+  <div class="flex-1">
+    <form [formGroup]="addLobbyForm" (ngSubmit)="submitForm();">
+      <mat-card class="add-lobby-card">
+        <mat-card-header>
+          <mat-card-title class="add-lobby-title">Create Lobby</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="flex-col">
+            <mat-form-field>
+              <mat-label>Lobby Name</mat-label>
+              <input matInput formControlName="lobbyName"
+                required>
+              @if (formControlHasError('lobbyName')) {
+                <mat-error data-test="lobbyNameError">
+                  {{getErrorMessage('lobbyName')}}
+                </mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+        </mat-card-content>
+        <mat-card-actions align="end">
+          <button
+            mat-button
+            type="button"
+            color="primary"
+            [disabled]="!addLobbyForm.valid"
+            type="submit"
+            data-test="confirmAddLobbyButton"
+            >
+            CREATE LOBBY
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+</div>

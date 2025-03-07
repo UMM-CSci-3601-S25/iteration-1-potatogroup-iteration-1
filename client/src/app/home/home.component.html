@@ -1,14 +1,20 @@
 <div class="flex-row">
   <div class="flex-1">
-    <mat-card class="home-card">
-      <mat-card-header>
-        <mat-card-title>
-          Home
-        </mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        This is a home page! It doesn't do anything!
-      </mat-card-content>
+    <mat-card class="start-screen">
+      <mat-card-title class="game-title">Card Game Simulator</mat-card-title>
+      <mat-card-actions>
+        <button class= "host-button" mat-raised-button routerLink="/host">
+          Host Game
+        </button>
+        <button class= "join-button" mat-raised-button routerLink="/join">
+          Join Game
+        </button>
+      </mat-card-actions>
     </mat-card>
+    <div class="button-container">
+      <button mat-fab class="info-fab" matTooltip="Rules and Information" matTooltipPosition="left" (click)="openDialog()">
+        <mat-icon class="md-24" aria-label="Info">info</mat-icon>
+      </button>
+    </div>
   </div>
 </div>
