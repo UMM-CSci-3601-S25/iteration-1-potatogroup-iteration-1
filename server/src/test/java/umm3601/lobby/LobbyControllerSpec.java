@@ -1,28 +1,21 @@
 package umm3601.lobby;
 
 import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.expr;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.bson.Document;
 import org.bson.types.ObjectId;
@@ -31,14 +24,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
@@ -53,12 +43,7 @@ import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.json.JavalinJackson;
 import io.javalin.validation.BodyValidator;
-import io.javalin.validation.Validation;
-import io.javalin.validation.ValidationError;
 import io.javalin.validation.ValidationException;
-import io.javalin.validation.Validator;
-import umm3601.lobby.LobbyController;
-
 public class LobbyControllerSpec {
 // An instance of the controller we're testing that is prepared in
   // `setupEach()`, and then exercised in the various tests below.
@@ -76,7 +61,7 @@ public class LobbyControllerSpec {
   private static MongoDatabase db;
 
   // Used to translate between JSON and POJOs.
-  private static JavalinJackson javalinJackson = new JavalinJackson();
+  private static final JavalinJackson javalinJackson = new JavalinJackson();
 
   @Mock
   private Context ctx;
@@ -357,5 +342,40 @@ public class LobbyControllerSpec {
     // The message should be the message from our code under test, which should also include some text
     // indicating that there was a missing user name.
     assertTrue(exceptionMessage.contains("non-empty lobby name"));
+  }
+
+  @Test
+  void deleteFoundUser() throws IOException {
+    String testID = appleId.toHexString();
+    when(ctx.pathParam("id")).thenReturn(testID);
+
+    // User exists before deletion
+    assertEquals(1, db.getCollection("lobbies").countDocuments(eq("_id", new ObjectId(testID))));
+
+    lobbyController.deleteLobby(ctx);
+
+    verify(ctx).status(HttpStatus.OK);
+
+    // User is no longer in the database
+    assertEquals(0, db.getCollection("lobbies").countDocuments(eq("_id", new ObjectId(testID))));
+  }
+
+  @Test
+  void tryToDeleteNotFoundUser() throws IOException {
+    String testID = appleId.toHexString();
+    when(ctx.pathParam("id")).thenReturn(testID);
+
+    lobbyController.deleteLobby(ctx);
+    // User is no longer in the database
+    assertEquals(0, db.getCollection("users").countDocuments(eq("_id", new ObjectId(testID))));
+
+    assertThrows(NotFoundResponse.class, () -> {
+      lobbyController.deleteLobby(ctx);
+    });
+
+    verify(ctx).status(HttpStatus.NOT_FOUND);
+
+    // User is still not in the database
+    assertEquals(0, db.getCollection("users").countDocuments(eq("_id", new ObjectId(testID))));
   }
 }

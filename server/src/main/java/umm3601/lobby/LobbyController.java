@@ -1,14 +1,6 @@
 package umm3601.lobby;
 
-import static com.mongodb.client.model.Filters.and;
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.regex;
-
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -21,10 +13,11 @@ import org.bson.types.ObjectId;
 import org.mongojack.JacksonMongoCollection;
 
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.and;
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.regex;
 import com.mongodb.client.model.Sorts;
-import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.UpdateResult;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -32,7 +25,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import umm3601.Controller;
-import umm3601.user.*;
 
 /**
  * Controller that manages requests for info about lobbies.
@@ -178,55 +170,55 @@ public class LobbyController implements Controller {
    *   company (`count`, also in either `asc` or `desc` order).
    */
 
-  public void addNewUser(Context ctx)
-  {
-     /*
-     * The follow chain of statements uses the Javalin validator system
-     * to verify that instance of `Lobby` provided in this context is
-     * a "legal" lobby. It checks the following things (in order):
-     *    - The lobby has a value for the name (`lobby.name != null`)
-     *    - The lobby name is not blank (`lobby.name.length > 0`)
-     *    - The provided email is valid (matches EMAIL_REGEX)
-     *    - The provided age is > 0
-     *    - The provided age is < REASONABLE_AGE_LIMIT
-     *    - The provided role is valid (one of "admin", "editor", or "viewer")
-     *    - A non-blank company is provided
-     * If any of these checks fail, the Javalin system will throw a
-     * `BadRequestResponse` with an appropriate error message.
-     */
-    String body = ctx.body();
-    User newUser = ctx.bodyValidator(User.class)
-      .check(user -> user.name != null && user.name.length() > 0,
-        "User must have a non-empty lobby name; body was " + body)
-      .get();
-    ctx.json(Map.of("id", newUser._id));
-    String id = ctx.pathParam("lobbyID");
+  // public void addNewUser(Context ctx)
+  // {
+  //    /*
+  //    * The follow chain of statements uses the Javalin validator system
+  //    * to verify that instance of `Lobby` provided in this context is
+  //    * a "legal" lobby. It checks the following things (in order):
+  //    *    - The lobby has a value for the name (`lobby.name != null`)
+  //    *    - The lobby name is not blank (`lobby.name.length > 0`)
+  //    *    - The provided email is valid (matches EMAIL_REGEX)
+  //    *    - The provided age is > 0
+  //    *    - The provided age is < REASONABLE_AGE_LIMIT
+  //    *    - The provided role is valid (one of "admin", "editor", or "viewer")
+  //    *    - A non-blank company is provided
+  //    * If any of these checks fail, the Javalin system will throw a
+  //    * `BadRequestResponse` with an appropriate error message.
+  //    */
+  //   String body = ctx.body();
+  //   User newUser = ctx.bodyValidator(User.class)
+  //     .check(user -> user.name != null && user.name.length() > 0,
+  //       "User must have a non-empty lobby name; body was " + body)
+  //     .get();
+  //   ctx.json(Map.of("id", newUser._id));
+  //   String id = ctx.pathParam("lobbyID");
 
 
-    //Makes a Hashmap that holds the new user id
-    Map<String, Object> incomingMap = new HashMap<>();
-    incomingMap.put("id", newUser._id);
-    // convert to a Document
-    Document newDocument = new Document();
-    incomingMap.forEach((k, v) -> {
-            newDocument.append(k, v);
-    });
-    //Adds the document to the desired lobby
-    UpdateResult updateResult = lobbyCollection.updateOne(new Document("_id", id), Updates.push("users", newDocument));
-    if (updateResult.getModifiedCount() != 1) {
-      ctx.status(HttpStatus.NOT_FOUND);
-      throw new NotFoundResponse(
-        "Was unable to update Lobby "
-          + id
-          + "; perhaps illegal Lobby ID or an ID for an lobby not in the system?");
-    }
+  //   //Makes a Hashmap that holds the new user id
+  //   Map<String, Object> incomingMap = new HashMap<>();
+  //   incomingMap.put("id", newUser._id);
+  //   // convert to a Document
+  //   Document newDocument = new Document();
+  //   incomingMap.forEach((k, v) -> {
+  //           newDocument.append(k, v);
+  //   });
+  //   //Adds the document to the desired lobby
+  //   UpdateResult updateResult = lobbyCollection.updateOne(new Document("_id", id), Updates.push("users", newDocument));
+  //   if (updateResult.getModifiedCount() != 1) {
+  //     ctx.status(HttpStatus.NOT_FOUND);
+  //     throw new NotFoundResponse(
+  //       "Was unable to update Lobby "
+  //         + id
+  //         + "; perhaps illegal Lobby ID or an ID for an lobby not in the system?");
+  //   }
 
-    // 201 (`HttpStatus.CREATED`) is the HTTP code for when we successfully
-    // create a new resource (a lobby in this case).
-    // See, e.g., https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-    // for a description of the various response codes.
-    ctx.status(HttpStatus.CREATED);
-  }
+  //   // 201 (`HttpStatus.CREATED`) is the HTTP code for when we successfully
+  //   // create a new resource (a lobby in this case).
+  //   // See, e.g., https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+  //   // for a description of the various response codes.
+  //   ctx.status(HttpStatus.CREATED);
+  // }
 
   /**
    * Add a new lobby using information from the context
@@ -292,21 +284,6 @@ public class LobbyController implements Controller {
   }
 
 
-  /**
-   * Utility function to generate the md5 hash for a given string
-   *
-   * @param str the string to generate a md5 for
-   */
-  public String md5(String str) throws NoSuchAlgorithmException {
-    MessageDigest md = MessageDigest.getInstance("MD5");
-    byte[] hashInBytes = md.digest(str.toLowerCase().getBytes(StandardCharsets.UTF_8));
-
-    StringBuilder result = new StringBuilder();
-    for (byte b : hashInBytes) {
-      result.append(String.format("%02x", b));
-    }
-    return result.toString();
-  }
 
   /**
    * Sets up routes for the `lobby` collection endpoints.

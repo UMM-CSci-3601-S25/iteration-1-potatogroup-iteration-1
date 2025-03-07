@@ -1,11 +1,10 @@
 package umm3601.lobby;
 
-import java.util.ArrayList;
 
 import org.mongojack.Id;
 import org.mongojack.ObjectId;
 
-import umm3601.user.User;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 // There are two examples of suppressing CheckStyle
 // warnings in this class. If you create new classes
@@ -23,6 +22,7 @@ import umm3601.user.User;
 // check in CheckStyle so that we don't get a failed
 // build when Gradle runs CheckStyle.
 @SuppressWarnings({"VisibilityModifier"})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Lobby {
 
   @ObjectId @Id
