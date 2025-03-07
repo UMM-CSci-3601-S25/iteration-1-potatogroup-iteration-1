@@ -204,7 +204,8 @@ public class LobbyController implements Controller {
   //           newDocument.append(k, v);
   //   });
   //   //Adds the document to the desired lobby
-  //   UpdateResult updateResult = lobbyCollection.updateOne(new Document("_id", id), Updates.push("users", newDocument));
+  //   UpdateResult updateResult = lobbyCollection.updateOne(
+  //   new Document("_id", id), Updates.push("users", newDocument));
   //   if (updateResult.getModifiedCount() != 1) {
   //     ctx.status(HttpStatus.NOT_FOUND);
   //     throw new NotFoundResponse(

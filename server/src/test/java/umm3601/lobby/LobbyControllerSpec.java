@@ -1,15 +1,5 @@
 package umm3601.lobby;
 
-import static com.mongodb.client.model.Filters.eq;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,13 +10,21 @@ import java.util.Map;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.mongodb.MongoClientSettings;
@@ -35,6 +33,7 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import static com.mongodb.client.model.Filters.eq;
 
 import io.javalin.Javalin;
 import io.javalin.http.BadRequestResponse;
@@ -61,7 +60,7 @@ public class LobbyControllerSpec {
   private static MongoDatabase db;
 
   // Used to translate between JSON and POJOs.
-  private static final JavalinJackson javalinJackson = new JavalinJackson();
+  private static JavalinJackson javalinJackson = new JavalinJackson();
 
   @Mock
   private Context ctx;
@@ -269,14 +268,11 @@ public class LobbyControllerSpec {
     // The new lobby in the database (`addedLobby`) should have the same
     // field values as the lobby we asked it to add (`newLobby`).
     String compareUserIDs = "";
-    for(int i = 0; i < newLobby.userIDs.length; i++)
-    {
-      if(i == 0)
-      {
+    for (int i = 0; i < newLobby.userIDs.length; i++) {
+      if (i == 0) {
           compareUserIDs += newLobby.userIDs[i];
-      }
-      else
-      {
+
+      } else {
         compareUserIDs += ", " + newLobby.userIDs[i];
       }
     }
